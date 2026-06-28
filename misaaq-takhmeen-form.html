@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Misaaq Takhmeen Form</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f0ede8; min-height: 100vh; padding: 2rem 1rem; display: flex; justify-content: center; }
+  .wrapper { width: 100%; max-width: 560px; }
+  .card { background: #fff; border-radius: 16px; padding: 2rem; border: 1px solid #e2ddd7; margin-bottom: 1rem; }
+  .brand { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #9a8f83; margin-bottom: 4px; }
+  h1 { font-size: 20px; font-weight: 600; color: #1a1714; margin-bottom: .25rem; }
+  .subtitle { font-size: 13px; color: #9a8f83; margin-bottom: 1.75rem; }
+  .section-title { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #9a8f83; margin: 1.5rem 0 .75rem; padding-bottom: 6px; border-bottom: 1px solid #ede9e3; }
+  .section-title:first-of-type { margin-top: 0; }
+  .field { margin-bottom: 1rem; }
+  label { display: block; font-size: 13px; font-weight: 500; color: #5c544c; margin-bottom: 5px; }
+  input { width: 100%; padding: 10px 14px; border: 1px solid #ddd8d2; border-radius: 8px; font-size: 15px; color: #1a1714; background: #faf9f7; outline: none; transition: border-color .15s, box-shadow .15s; }
+  input:focus { border-color: #8b7355; box-shadow: 0 0 0 3px rgba(139,115,85,.12); background: #fff; }
+  input::placeholder { color: #bbb5ae; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .generate-btn { width: 100%; padding: 14px; background: #2b2520; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; transition: background .15s; margin-top: .5rem; }
+  .generate-btn:hover { background: #3d342c; }
+  .generate-btn:active { transform: scale(.99); }
+  .error { display: none; margin-top: .75rem; padding: 10px 14px; border-radius: 8px; font-size: 13px; background: #fdf0f0; color: #8c2020; border: 1px solid #f0baba; }
+  .success { display: none; margin-top: .75rem; padding: 10px 14px; border-radius: 8px; font-size: 13px; background: #edf7f0; color: #276641; border: 1px solid #b8e2c5; }
+  .instructions { background: #faf9f7; border-radius: 12px; padding: 1rem 1.25rem; border: 1px solid #e8e3dc; font-size: 13px; color: #5c544c; line-height: 1.6; }
+  .instructions p { margin-bottom: .5rem; }
+  .instructions p:last-child { margin-bottom: 0; }
+  .instructions strong { color: #2b2520; }
+  @media (max-width: 440px) { .row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="card">
+    <p class="brand">Dawoodi Bohra — Misaaq</p>
+    <h1>Misaaq Takhmeen Form</h1>
+    <p class="subtitle">Fill in the details below to generate and download the PDF</p>
+
+    <p class="section-title">Farzand Details</p>
+
+    <div class="row">
+      <div class="field">
+        <label for="token">Token No</label>
+        <input type="text" id="token" placeholder="e.g. 001" />
+      </div>
+      <div class="field">
+        <label for="its">ITS No</label>
+        <input type="text" id="its" placeholder="7-digit ITS" inputmode="numeric" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="name">Name</label>
+      <input type="text" id="name" placeholder="Full name" />
+    </div>
+
+    <div class="field">
+      <label for="place">Place &amp; Mohallah</label>
+      <input type="text" id="place" placeholder="City and Mohallah" />
+    </div>
+
+    <div class="field">
+      <label for="mobile">Mobile No</label>
+      <input type="tel" id="mobile" placeholder="+1 or local number" />
+    </div>
+
+    <p class="section-title">Takhmeen</p>
+
+    <div class="row">
+      <div class="field">
+        <label for="njawa">Njawa al-Shukr</label>
+        <input type="text" id="njawa" placeholder="Amount" inputmode="numeric" />
+      </div>
+      <div class="field">
+        <label for="sila">Silat al-Imam</label>
+        <input type="text" id="sila" placeholder="Amount" inputmode="numeric" />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="hadiya">Hadiyat al-Salam</label>
+        <input type="text" id="hadiya" placeholder="Amount" inputmode="numeric" />
+      </div>
+      <div class="field">
+        <label for="sarkari">Sarkari Lakat</label>
+        <input type="text" id="sarkari" placeholder="Amount" inputmode="numeric" />
+      </div>
+    </div>
+
+    <button class="generate-btn" onclick="generatePDF()">Generate &amp; Download PDF</button>
+    <div class="error" id="error-msg">Please fill in Token No, ITS No, and Name before generating.</div>
+    <div class="success" id="success-msg">PDF downloaded successfully!</div>
+  </div>
+
+  <div class="instructions">
+    <p><strong>Instructions:</strong></p>
+    <p>This form is for Indian nationals registering for Misaaq. Fill all fields, then click Generate to download your completed Takhmeen PDF.</p>
+    <p>After downloading, WhatsApp the PDF to <strong>+91 88664 85353</strong>.</p>
+    <p>Login to <strong>ITS52.com</strong> on the live date using Farzand's ITS to complete Self Allocation.</p>
+  </div>
+</div>
+
+<script>
+function generatePDF() {
+  var token   = document.getElementById('token').value.trim();
+  var its     = document.getElementById('its').value.trim();
+  var name    = document.getElementById('name').value.trim();
+  var place   = document.getElementById('place').value.trim();
+  var mobile  = document.getElementById('mobile').value.trim();
+  var njawa   = document.getElementById('njawa').value.trim();
+  var sila    = document.getElementById('sila').value.trim();
+  var hadiya  = document.getElementById('hadiya').value.trim();
+  var sarkari = document.getElementById('sarkari').value.trim();
+
+  var errEl = document.getElementById('error-msg');
+  var okEl  = document.getElementById('success-msg');
+
+  errEl.style.display = 'none';
+  okEl.style.display  = 'none';
+
+  if (!token || !its || !name) {
+    errEl.style.display = 'block';
+    return;
+  }
+
+  var { jsPDF } = window.jspdf;
+  var doc = new jsPDF({ unit: 'pt', format: 'a4' });
+
+  var pw     = doc.internal.pageSize.getWidth();   // 595
+  var margin = 48;
+  var tLeft  = margin;
+  var tRight = pw - margin;
+  var tWidth = tRight - tLeft;
+  var labelW = 150;
+  var rowH   = 36;
+  var y      = 48;
+
+  // Outer border
+  doc.setDrawColor(100, 90, 78);
+  doc.setLineWidth(1.8);
+  doc.rect(tLeft - 10, y - 8, tWidth + 20, 670);
+
+  // Inner border
+  doc.setLineWidth(0.6);
+  doc.rect(tLeft - 4, y - 2, tWidth + 8, 658);
+
+  // ── Title ──
+  y += 30;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(18);
+  doc.setTextColor(25, 20, 14);
+  doc.text('MISAAQ TAKHMEEN FORM', pw / 2, y, { align: 'center' });
+
+  y += 10;
+  doc.setLineWidth(0.5);
+  doc.setDrawColor(180, 170, 158);
+  doc.line(tLeft, y, tRight, y);
+
+  // ── Sub-title ──
+  y += 20;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(12);
+  doc.setTextColor(80, 70, 58);
+  doc.text('Farzand Details', pw / 2, y, { align: 'center' });
+
+  y += 10;
+  doc.line(tLeft, y, tRight, y);
+
+  // ── Helper: standard data row ──
+  function dataRow(label, value, yPos) {
+    doc.setDrawColor(180, 170, 158);
+    doc.setLineWidth(0.4);
+    doc.rect(tLeft, yPos, tWidth, rowH);
+
+    doc.setFillColor(245, 242, 237);
+    doc.rect(tLeft, yPos, labelW, rowH, 'F');
+    doc.line(tLeft + labelW, yPos, tLeft + labelW, yPos + rowH);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(50, 42, 34);
+    doc.text(label, tLeft + 8, yPos + rowH / 2 + 4);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(11);
+    doc.setTextColor(20, 16, 10);
+    doc.text(value || '', tLeft + labelW + 10, yPos + rowH / 2 + 4);
+  }
+
+  // ── Farzand rows ──
+  dataRow('TOKEN NO',   token,  y); y += rowH;
+  dataRow('ITS NO',     its,    y); y += rowH;
+  dataRow('NAME',       name,   y); y += rowH;
+
+  // Place & Mohallah — tall row
+  var tallH = 50;
+  doc.setDrawColor(180, 170, 158);
+  doc.setLineWidth(0.4);
+  doc.rect(tLeft, y, tWidth, tallH);
+  doc.setFillColor(245, 242, 237);
+  doc.rect(tLeft, y, labelW, tallH, 'F');
+  doc.line(tLeft + labelW, y, tLeft + labelW, y + tallH);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10);
+  doc.setTextColor(50, 42, 34);
+  doc.text('PLACE &',    tLeft + 8, y + 16);
+  doc.text('MOHALLAH',   tLeft + 8, y + 30);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(11);
+  doc.setTextColor(20, 16, 10);
+  doc.text(place || '', tLeft + labelW + 10, y + tallH / 2 + 4);
+  y += tallH;
+
+  dataRow('MOBILE NO', mobile, y); y += rowH;
+
+  // ── TAKHMEEN header ──
+  doc.setFillColor(220, 212, 200);
+  doc.rect(tLeft, y, tWidth, rowH, 'F');
+  doc.setDrawColor(180, 170, 158);
+  doc.rect(tLeft, y, tWidth, rowH);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.setTextColor(25, 20, 14);
+  doc.text('TAKHMEEN', pw / 2, y + rowH / 2 + 5, { align: 'center' });
+  y += rowH;
+
+  // ── Takhmeen rows with transliteration ──
+  function tRow(english, value, yPos) {
+    doc.setDrawColor(180, 170, 158);
+    doc.setLineWidth(0.4);
+    doc.rect(tLeft, yPos, tWidth, rowH);
+
+    var lw2 = 180;
+    doc.setFillColor(250, 248, 244);
+    doc.rect(tLeft, yPos, lw2, rowH, 'F');
+    doc.line(tLeft + lw2, yPos, tLeft + lw2, yPos + rowH);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(50, 42, 34);
+    doc.text(english, tLeft + 8, yPos + rowH / 2 + 4);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(11);
+    doc.setTextColor(20, 16, 10);
+    doc.text(value || '', tLeft + lw2 + 10, yPos + rowH / 2 + 4);
+  }
+
+  tRow('NJAWA AL-SHUKR',   njawa,   y); y += rowH;
+  tRow('SILAT AL-IMAM',    sila,    y); y += rowH;
+  tRow('HADIYAT AL-SALAM', hadiya,  y); y += rowH;
+  tRow('SARKARI LAKAT',    sarkari, y); y += rowH;
+
+  // ── Signature line ──
+  y += 28;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.setTextColor(60, 52, 44);
+  doc.text('Signature of Amil: ___________________________', tLeft + 10, y);
+
+  // ── Divider ──
+  y += 28;
+  doc.setLineWidth(0.5);
+  doc.setDrawColor(180, 170, 158);
+  doc.line(tLeft, y, tRight, y);
+
+  // ── Instructions ──
+  y += 18;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10);
+  doc.setTextColor(25, 20, 14);
+  doc.text('INSTRUCTIONS', pw / 2, y, { align: 'center' });
+
+  y += 16;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(70, 60, 50);
+
+  var lines = [
+    'This form is for Indian nationals only. Register via Misaaq and submit this Takhmeen form.',
+    'After filling, WhatsApp to +91 88664 85353. Mumineen must use the iPhone app.',
+    "Login to ITS52.com on the live date using Farzand's ITS to complete Self Allocation.",
+    'Use the platform to pay Njawa al-Shukr, Silat al-Imam, Hadiyat al-Salam, and Sarkari Lakat online.'
+  ];
+
+  lines.forEach(function(line) {
+    var wrapped = doc.splitTextToSize(line, tWidth - 20);
+    doc.text(wrapped, pw / 2, y, { align: 'center' });
+    y += wrapped.length * 13 + 4;
+  });
+
+  // ── Save ──
+  doc.save('Misaaq_Takhmeen_' + its + '.pdf');
+  okEl.style.display = 'block';
+}
+</script>
+</body>
+</html>
